@@ -1,9 +1,9 @@
-name: "Close stale issues and PRs"
+name: 'Close stale issues and PRs'
 
 on:
   workflow_call:
   schedule:
-    - cron: "00 4 * * *"
+    - cron: '00 4 * * *'
 
 permissions:
   actions: write
@@ -11,10 +11,10 @@ permissions:
   pull-requests: write
 
 env:
-  ISSUE_STALE_DAYS: "45"
-  PR_STALE_DAYS: "30"
-  ISSUE_CLOSE_DAYS: "15"
-  PR_CLOSE_DAYS: "15"
+  ISSUE_STALE_DAYS: '45'
+  PR_STALE_DAYS: '30'
+  ISSUE_CLOSE_DAYS: '15'
+  PR_CLOSE_DAYS: '15'
 
 jobs:
   stale:
