@@ -1,9 +1,9 @@
-name: 'Close stale issues and PRs'
+name: "Close stale issues and PRs"
 
 on:
   workflow_call:
   schedule:
-    - cron: '00 4 * * *'
+    - cron: "00 4 * * *"
 
 permissions:
   actions: write
@@ -11,28 +11,20 @@ permissions:
   pull-requests: write
 
 env:
-  ISSUE_STALE_DAYS: '45'
-  PR_STALE_DAYS: '30'
-  ISSUE_CLOSE_DAYS: '60'
-  PR_CLOSE_DAYS: '45'
+  ISSUE_STALE_DAYS: "45"
+  PR_STALE_DAYS: "30"
+  ISSUE_CLOSE_DAYS: "15"
+  PR_CLOSE_DAYS: "15"
 
 jobs:
   stale:
     runs-on: ubuntu-latest
     steps:
-      - name: Compute day differences
-        id: diffs
-        run: |
-          ISSUE_DIFF=$(( ISSUE_CLOSE_DAYS - ISSUE_STALE_DAYS ))
-          PR_DIFF=$(( PR_CLOSE_DAYS - PR_STALE_DAYS ))
-          echo "ISSUE_DIFF=${ISSUE_DIFF}" >> "$GITHUB_ENV"
-          echo "PR_DIFF=${PR_DIFF}" >> "$GITHUB_ENV"
-          echo "issue_diff=${ISSUE_DIFF}" >> "$GITHUB_OUTPUT"
-          echo "pr_diff=${PR_DIFF}" >> "$GITHUB_OUTPUT"
-
       - name: Run actions/stale
         uses: actions/stale@v11
         with:
+          ignore-updates: true
+          remove-stale-when-updated: false
           stale-issue-message: |
             📌 Esta mensagem está tanto em português quanto em inglês (mais abaixo)  — assim todo mundo consegue acompanhar!
             📌 This message is in both Portuguese and English (further down) — so everyone can follow along!
@@ -41,13 +33,13 @@ jobs:
 
             👋 Olá!
 
-            Esta issue está obsoleta porque ficou aberta por ${{ env.ISSUE_STALE_DAYS }} dias sem atividade. Remova o rótulo de stale ou comente, caso contrário ela será fechada em ${{ steps.diffs.outputs.issue_diff }} dias.
+            Esta issue está obsoleta porque ficou aberta por ${{ env.ISSUE_STALE_DAYS }} dias sem atividade. Remova o rótulo de stale para evitar o fechamento automático em mais ${{ env.ISSUE_CLOSE_DAYS }} dias.
 
             🇬🇧 **English**
 
             Hey there! 👋
 
-            This issue is stale because it has been open ${{ env.ISSUE_STALE_DAYS }} days with no activity. Remove stale label or comment or this will be closed in ${{ steps.diffs.outputs.issue_diff }} days.
+            This issue is stale because it has been open ${{ env.ISSUE_STALE_DAYS }} days with no activity. Remove the stale label to avoid automatic closure in another ${{ env.ISSUE_CLOSE_DAYS }} days.
           stale-pr-message: |
             📌 Esta mensagem está tanto em português quanto em inglês (mais abaixo)  — assim todo mundo consegue acompanhar!
             📌 This message is in both Portuguese and English (further down) — so everyone can follow along!
@@ -56,13 +48,13 @@ jobs:
 
             👋 Olá!
 
-            Este PR está obsoleto porque ficou aberto por ${{ env.PR_STALE_DAYS }} dias sem atividade. Remova o rótulo de stale ou comente, caso contrário ele será fechado em ${{ steps.diffs.outputs.pr_diff }} dias.
+            Este PR está obsoleto porque ficou aberto por ${{ env.PR_STALE_DAYS }} dias sem atividade. Remova o rótulo de stale para evitar o fechamento automático em mais ${{ env.PR_CLOSE_DAYS }} dias.
 
             🇬🇧 **English**
 
             Hey there! 👋
 
-            This PR is stale because it has been open ${{ env.PR_STALE_DAYS }} days with no activity. Remove stale label or comment or this will be closed in ${{ steps.diffs.outputs.pr_diff }} days.
+            This PR is stale because it has been open ${{ env.PR_STALE_DAYS }} days with no activity. Remove the stale label to avoid automatic closure in another ${{ env.PR_CLOSE_DAYS }} days.
           close-issue-message: |
             📌 Esta mensagem está tanto em português quanto em inglês (mais abaixo)  — assim todo mundo consegue acompanhar!
             📌 This message is in both Portuguese and English (further down) — so everyone can follow along!
@@ -75,7 +67,7 @@ jobs:
 
             📅 **Linha do tempo:**
             - Marcada como inativa após ${{ env.ISSUE_STALE_DAYS }} dias sem atividade
-            - Fechada após ${{ steps.diffs.outputs.issue_diff }} dias adicionais sem resposta
+            - Fechada após mais ${{ env.ISSUE_CLOSE_DAYS }} dias sem resposta
 
             💡 **Próximos passos:**
             - Se isso ainda for relevante, reabra e forneça uma atualização
@@ -92,7 +84,7 @@ jobs:
 
             📅 **Timeline:**
             - Marked as stale after ${{ env.ISSUE_STALE_DAYS }} days of inactivity
-            - Closed after ${{ steps.diffs.outputs.issue_diff }} additional days without response
+            - Closed after another ${{ env.ISSUE_CLOSE_DAYS }} days without response
 
             💡 **Next steps:**
             - If this is still relevant, please reopen and provide an update
@@ -112,7 +104,7 @@ jobs:
 
             📅 **Linha do tempo:**
             - Marcado como inativo após ${{ env.PR_STALE_DAYS }} dias sem atividade
-            - Fechado após ${{ steps.diffs.outputs.pr_diff }} dias adicionais sem resposta
+            - Fechado após mais ${{ env.PR_CLOSE_DAYS }} dias sem resposta
 
             🔄 **Para continuar:**
             - Reabra este PR se quiser continuar trabalhando nele
@@ -129,7 +121,7 @@ jobs:
 
             📅 **Timeline:**
             - Marked as stale after ${{ env.PR_STALE_DAYS }} days of inactivity  
-            - Closed after ${{ steps.diffs.outputs.pr_diff }} additional days without response
+            - Closed after another ${{ env.PR_CLOSE_DAYS }} days without response
 
             🔄 **To continue:**
             - Reopen this PR if you want to continue working on it
